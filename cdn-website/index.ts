@@ -2,6 +2,15 @@ import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import * as fs from "fs";
 import * as mime from "mime";
+import { Output } from "@pulumi/pulumi";
+
+
+interface Arguments {
+  subDomain: string;
+  domainName: string;
+  route53ZoneID: Output<string>;
+  acmCertificateARN: Output<string>;
+}
 
 // This is a simpler verison of:
 // https://github.com/pulumi/pulumi-aws-static-website
@@ -9,10 +18,11 @@ export class CdnWebsite extends pulumi.ComponentResource {
   private bucket: aws.s3.BucketV2;
   private bucketAcl: aws.s3.BucketAclV2;
   private cloudfrontDistribution: aws.cloudfront.Distribution;
+  private route53Record: aws.route53.Record;
   private s3OriginId: string = "myS3Origin";
   private staticWebsiteDirectory: string = "./website";
 
-  constructor(name: string, args: any, opts?: pulumi.ComponentResourceOptions) {
+  constructor(name: string, args: Arguments, opts?: pulumi.ComponentResourceOptions) {
     super("pulumi:challenge:CdnWebsite", name, args, opts);
 
     this.bucket = new aws.s3.BucketV2(
@@ -48,9 +58,12 @@ export class CdnWebsite extends pulumi.ComponentResource {
           },
         ],
         enabled: true,
-        isIpv6Enabled: true,
+        isIpv6Enabled: false,
         comment: "Some comment",
         defaultRootObject: "index.html",
+        aliases: [
+          args.subDomain+"."+args.domainName
+        ],
         defaultCacheBehavior: {
           allowedMethods: [
             "DELETE",
@@ -78,12 +91,30 @@ export class CdnWebsite extends pulumi.ComponentResource {
         restrictions: {
           geoRestriction: {
             restrictionType: "whitelist",
-            locations: ["US", "CA", "GB", "DE"],
+            locations: ["US", "CA", "GB", "DE", "IN"],
           },
         },
         viewerCertificate: {
-          cloudfrontDefaultCertificate: true,
+          acmCertificateArn: args.acmCertificateARN,  // Per AWS, ACM certificate must be in the us-east-1 region.
+          sslSupportMethod: "sni-only",
         },
+      },
+      {
+        parent: this,
+      }
+    );
+
+    this.route53Record = new aws.route53.Record(args.subDomain, {
+      zoneId: args.route53ZoneID,
+      name: args.subDomain,
+      type: "A",
+      aliases: [
+        {
+          name: this.cloudfrontDistribution.domainName,
+          zoneId: this.cloudfrontDistribution.hostedZoneId,
+          evaluateTargetHealth: false,
+        },
+      ]
       },
       {
         parent: this,

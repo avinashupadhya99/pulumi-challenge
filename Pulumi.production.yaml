@@ -3,3 +3,12 @@ config:
   checkly:accountId: d62cd8ae-8097-4f3e-8935-5201336c32cd
   checkly:apiKey:
     secure: AAABAGe7JlmA5cUaYIY0XKHjaoKbWGbYW1ggUdbrbp5NuyiPjNYkVVY3yRMHbUS5APqLzd8nkRRL6uc5dqVox7G58A==
+  pulumi-challenge:address:
+    secure: AAABABLj0aF+qLdE93/RHP1yYCFM0/hINBB+Jw6/K4OW1360e5/MFZks7u1fynzb0wuCEFgw/OSEiC3evKxNYn/nZvnptrXAXSMllNdYRHeYQwQCm0ErV6Byk0tTc3PI4Vv09zr+eWFSxVV0OvA0/L2Ot5nQyv0MWQ1tvcb5onPuKQlqd2o=
+  pulumi-challenge:domainName: avinashupadhyaya.live
+  pulumi-challenge:email:
+    secure: AAABALGB3gE/DhmGca2WZR0ZnfsKsknbpoQeLw6fQmQq+/sW9VkXZpwx0Qjgx7LAX5igWKTd/9JnzQ==
+  pulumi-challenge:name-com-token:
+    secure: AAABALHDGs4+sAMrmzMa0COmelCvEvNUZ1J7qsAVFcQVJ/3m1CW01IUdZm1GmslO735igDXykl7Bfp/4YriYNMKt7QSqTKOz
+  pulumi-challenge:name-com-user-name:
+    secure: AAABACyePZFjDAlM1W5C2w3HBD4DU3hn7FwhnC7+TO+Gn1uN89z8Sn3rkqMaf7qQzpSJlTONC5gH9A==

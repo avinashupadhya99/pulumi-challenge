@@ -21,6 +21,16 @@ pulumi config set checkly:apiKey --secret
 
 # AccountID: https://app.checklyhq.com/settings/account/general
 pulumi config set checkly:accountId
+
+pulumi config set domainName
+
+pulumi config set name-com-token --secret
+
+pulumi config set name-com-user-name --secret
+
+pulumi config set email --secret
+
+pulumi config set address --secret
 ```
 
 ```
